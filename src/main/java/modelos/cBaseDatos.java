@@ -22,7 +22,7 @@ public class cBaseDatos {
     String usuario = "root";
     String clave   = "";
 
-    private Connection Conectar() {
+    public Connection Conectar() {
         try {
             Class.forName(driver);
             Connection xcon = DriverManager.getConnection(url,usuario,clave);
@@ -85,24 +85,33 @@ public class cBaseDatos {
         }
         return vRet;
     }
-    protected String generarCodigo(String tabla, String campo) throws SQLException {
+    public String generarCodigo(String tabla, String campo){
         String rpta = "";
         String sql = "select count(*) from " + tabla;
         Connection xcon = this.Conectar();
-        Statement st = xcon.createStatement();
-        ResultSet rs = st.executeQuery(sql);
-        rs.next();
-        int cant = Integer.parseInt(rs.getString(1).toString());
-        if ( cant <= 0 )
-            rpta = "1";
-        else {
-            sql = "select max(" + campo + ") from " + tabla;
-            rs = st.executeQuery(sql);
+        try {
+            Statement st = xcon.createStatement();
+            ResultSet rs = st.executeQuery(sql);
             rs.next();
-            cant = Integer.parseInt(rs.getString(1).toString()) + 1;
-            rpta = "" + cant;
+            int cant = Integer.parseInt(rs.getString(1).toString());
+            if ( cant <= 0 )
+                rpta = "1";
+            else {
+                sql = "select max(" + campo + ") from " + tabla;
+                rs = st.executeQuery(sql);
+                rs.next();
+                cant = Integer.parseInt(rs.getString(1).toString()) + 1;
+                rpta = "" + cant;
+            }
+            xcon.close();
+            return rpta;
+        } catch (SQLException e) {
+            System.out.println("Error al generar codigo");
+            System.out.println(e.getMessage());
+            System.out.println(rpta);
+            e.printStackTrace();
+
         }
-        xcon.close();
         return rpta;
      }
     

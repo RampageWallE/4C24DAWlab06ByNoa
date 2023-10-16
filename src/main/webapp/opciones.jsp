@@ -33,9 +33,9 @@ if(misession == null || misession.getAttribute("usuario") == null){
                 <h4>Mantenimientos</h4>
                 <a href="/WebSistema/controladorPrincipal?accion=listadoAreas" class="list-group-item list-group-item-action list-group-item-secondary" 
                    target="derecha">Registro Areas</a>
-                <a href="ListarAlumnos.jsp" class="list-group-item list-group-item-action list-group-item-secondary" 
+                <a href="/WebSistema/controladorPrincipal?accion=listadoAlumnos" class="list-group-item list-group-item-action list-group-item-secondary" 
                    target="derecha">Registro Alumnos</a>
-                <a href="listarCursos.jsp" class="list-group-item list-group-item-action list-group-item-secondary" 
+                <a href="/WebSistema/controladorPrincipal?accion=listadoCursos" class="list-group-item list-group-item-action list-group-item-secondary" 
                    target="derecha">Registro Cursos</a>
                 <a target="_top" class="list-group-item list-group-item-action list-group-item-secondary" 
                    href="/WebSistema/ServletSesion">Cerrar Sesion</a>
