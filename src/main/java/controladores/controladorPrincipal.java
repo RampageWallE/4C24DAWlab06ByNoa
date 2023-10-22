@@ -45,6 +45,8 @@ public class controladorPrincipal extends HttpServlet {
             String accion = request.getParameter("accion");
             IAlumnosDAO dao = new AlumnoDAOImpl();
             ICursosDAO dao1 = new CursoDAOImpl();
+            IMatriculaDAO dao2 = new MatriculaDAOImpl();
+
 
 
             if (accion == null) {
@@ -258,7 +260,112 @@ public class controladorPrincipal extends HttpServlet {
                 } 
                 
                 //Aca finaliza opcion Cursos
+                else if (accion.compareTo("matriculaMostrarAlumnos") == 0){
+                    if(request.getParameter("modo").compareTo("Lista")== 0){
+                        List<Alumnos> arrAlumnos = new ArrayList<Alumnos>();
+                        Alumnos alumno = new Alumnos();
+                        alumno.setNombre(" ");
+                        //dao2 = IMatriculaDAO
+                        arrAlumnos = dao2.buscarAlumnos(alumno);
+                        request.getRequestDispatcher("/operaciones/matriculaMostrarAlumnos.jsp").forward(
+                                request, response);
+                    }else if(request.getParameter("boton").compareTo("Buscar") == 0){
+                        List<Alumnos> arrAlumnos = new ArrayList<Alumnos>();
+                        Alumnos alumno = new Alumnos();
+                        alumno.setNombre(request.getParameter("xalu"));
+                        //dao2 = IMatriculaDAO
+                        arrAlumnos = dao2.buscarAlumnos(alumno);
+                        request.setAttribute("arrAlumnos", arrAlumnos);
+                        request.getRequestDispatcher("/operaciones/matriculaMostrarAlumnos.jsp").forward(
+                                request, response);   
+                    }else{
+                        int xcodAlumno = Integer.parseInt(request.getParameter("xcodAlumno"));
+                        Alumnos alumno = new Alumnos();
+                        alumno = dao.buscar(xcodAlumno);
+                        
+                        List<Cursos> arrCursos = new ArrayList<Cursos>();
+                        arrCursos = dao2.buscarCursos();
+                        
+                        request.setAttribute("arrCursos", arrCursos);
+                        request.setAttribute("alumno", alumno);
+                        request.getRequestDispatcher("/operaciones/matriculaMostrarCursos.jsp").forward(
+                                request, response);
+                    }
+                }
+                else if(accion.compareTo("matriculaMostrarSubtotal") == 0 ){
+                    String xcodCursos[] = request.getParameterValues("xcodCurso");
+                    List<Cursos> arrCursos = new ArrayList<Cursos>();
+                    //dao1 = ICursosDAO
+                    double total = 0;
+                    for (int xc = 0; xc < xcodCursos.length; xc++){
+                        Cursos curso = new Cursos();
+                        curso = dao1.buscar(Integer.parseInt(xcodCursos[xc]));
+                        double costo = curso.getCosto();
+                        total = total + costo; 
+                        arrCursos.add(curso);
+                    }
+                    int xcodAlumno = Integer.parseInt(request.getParameter("xcodAlumno"));
+                    Alumnos alumno = new Alumnos();
+                    alumno = dao.buscar(xcodAlumno);
+                    cBaseDatos co = new cBaseDatos();
+                    String xcodMatricula = "MAT" + co.generarCodigo("matriculas", "codigo");
+                    request.setAttribute("arrCursos", arrCursos);
+                    request.setAttribute("alumno", alumno);
+                    request.setAttribute("total", total);
+                    request.setAttribute("xmatri", xcodMatricula);
+                    request.getRequestDispatcher("/operaciones/matriculaMostrarSubtotal.jsp").forward(
+                            request, response);
+                }
+                else if(accion.compareTo("matriculaGrabar") == 0){
+                    if (request.getParameter("boton").compareTo("GRABAR") == 0){
+                        String xcodAlumno = request.getParameter("xcodAlumno");
+                        String xcodCursos[] = request.getParameterValues("xcodCurso");
+                        String xmontos[] = request.getParameterValues("xmonto");
+                        
+                        String[] datosMatricula = new String[3];
+                        datosMatricula[0] = request.getParameter("xndoc");
+                        datosMatricula[1] = xcodAlumno;
+                        datosMatricula[2] = request.getParameter("xtotal");
+                        
+                        boolean rpta = dao2.grabarMatricula(datosMatricula, xcodCursos, xmontos);
+                        if (rpta){
+                            out.println("<br><h2>Registro grabado correctamente!!</h2>");
+                        }else{
+                            out.println("<br><h2>Error al grabar Matricula!!</h2>");
+                        }
+                    }
+                }
+                //ACA INICIA BUSQUEDA DE MATRICULAS
+                else if (accion.compareTo("matriculaMostrarMatriculas") == 0){
+                    if(request.getParameter("modo").compareTo("Lista")== 0){
+                        List<Matriculas> arrMatriculas = new ArrayList<Matriculas>();
+                        //dao2 = IMatriculaDAO
+                        arrMatriculas = dao2.listarMatriculas();
+                        request.setAttribute("arrMatriculas", arrMatriculas);
+                        request.getRequestDispatcher("/operaciones/matriculaMostrarMatriculas.jsp").forward(
+                                request, response);
+                    }else if(request.getParameter("boton").compareTo("Buscar") == 0){
+                        List<Matriculas> arrMatriculas = new ArrayList<Matriculas>();
+                        Matriculas matricula = new Matriculas();
+                        matricula.setNro_doc(request.getParameter("xmat"));
+                        //dao2 = IMatriculaDAO
+                        arrMatriculas = dao2.buscarMatriculas(matricula);
+                        request.setAttribute("arrMatriculas", arrMatriculas);
+                        request.getRequestDispatcher("/operaciones/matriculaMostrarMatriculas.jsp").forward(
+                                request, response);   
+                    }else{
+                        int xcodMatricula = Integer.parseInt(request.getParameter("xcodMatricula"));
+                        Matriculas matricula = new Matriculas();
+                        matricula.setCodigo(xcodMatricula);
+                        List<Detalles> arrDetalles = new ArrayList<Detalles>();
+                        arrDetalles = dao2.buscarDetalles(matricula);
+                        request.setAttribute("arrDetalles", arrDetalles);
+                        request.getRequestDispatcher("/operaciones/matriculaMostrarDetalles.jsp").forward(
+                                request, response);
+                    }
+                }
                 
+                //ACA FINALIZA BUSQUEDA DE MATRICULAS                
                 else {
                     out.println("Accion: (" + accion + ") no reconocida...");
                 }

@@ -41,6 +41,13 @@ if(misession == null || misession.getAttribute("usuario") == null){
                    href="/WebSistema/ServletSesion">Cerrar Sesion</a>
                 
             </div>
+                        <div class="alert alert-warning" role="alert">
+                <h4>Operaciones</h4>
+                <a href="/WebSistema/controladorPrincipal?accion=matriculaMostrarAlumnos&modo=Lista" class="list-group-item list-group-item-action list-group-item-secondary" 
+                   target="derecha">Crear Matricula</a>
+                <a href="/WebSistema/controladorPrincipal?accion=matriculaMostrarMatriculas&modo=Lista" class="list-group-item list-group-item-action list-group-item-secondary" 
+                   target="derecha">Administrar Matriculas</a>
+            </div>
         </div>
     </center>
 </body>
