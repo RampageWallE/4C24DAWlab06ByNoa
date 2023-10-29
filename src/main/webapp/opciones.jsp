@@ -48,6 +48,15 @@ if(misession == null || misession.getAttribute("usuario") == null){
                 <a href="/WebSistema/controladorPrincipal?accion=matriculaMostrarMatriculas&modo=Lista" class="list-group-item list-group-item-action list-group-item-secondary" 
                    target="derecha">Administrar Matriculas</a>
             </div>
+            <div class="alert alert-warning" role="alert">
+                <h4>Reportes</h4>
+                <a href="/WebSistema/reportes/listadoAlumnos.jsp" class="list-group-item list-group-item-action list-group-item-secondary" 
+                   target="derecha">Listar Alummnos</a>
+                <a href="/WebSistema/reportes/formularioListarAlumnosPorSexo.jsp" class="list-group-item list-group-item-action list-group-item-secondary" 
+                   target="derecha">Listar Alummnos por Sexo</a>            
+                 <a href="/WebSistema/reportes/formularioListadoDetalles.jsp" class="list-group-item list-group-item-action list-group-item-secondary" 
+                   target="derecha">Listar detalles de Matriculas</a>   
+            </div>
         </div>
     </center>
 </body>
